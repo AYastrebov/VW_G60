@@ -1,0 +1,61 @@
+Press, Atm
+    x = 1.95*(value/255 + 0.04) 
+
+Tcol, C
+    if (value > 0xF5):   value = -2
+    if (value < 4):      value = 4
+
+    v1 = (value/51) / (5.0 - (value/51)) * 11000.0
+    p = log(v1/2200)
+    x_Kelvin = 1.0 / (0.00000006752780000000001 * p^3 + 0.000002626311 * p^2 + 0.0002569355 * p + 0.003354016)
+    x_Celsius = x_Kelvin - 273.13
+
+Tair, C
+    if (value > 0xF5):   value = -2
+    if (value < 4):      value = 4
+
+    v1 = (value/51) / (5.0 - (value/51)) * 1300.0
+    p = log(v1/2200)
+    x_Kelvin = 1.0 / (0.00000006752780000000001 * p^3 + 0.000002626311 * p^2 + 0.0002569355 * p + 0.003354016)
+    x_Celsius = x_Kelvin - 273.13
+
+Freq, min-1
+    TableRazbivka - таблица разбивки частот (wordx16) [6300..480]
+
+    p = value/16
+    interpolation = (TableRazbivka[p + 1] - TableRazbivka[p]) * (value % 16) * (1/16)
+    x = TableRazbivka[p] + interpolation
+
+Tinj, ms
+    x = value/500
+    if (x > 15.0):  x = 15.0
+    if (x < 0.0):   x = 0.0
+
+UOZ, deg.
+    x = (193 - value) * 0.5
+    if (x > 40.0):  x = 40.0
+    if (x < 0.0):   x = 0.0
+
+Lambda, V
+    x = value/100
+
+TinjLambda, % (лямбда-коррекция Lcorr)
+    if (value <= 0x7F)
+       x = value / 4;
+    else
+       x = - (0x100 - value) / 4
+
+TinjLambda1, % (лямбда-коррекция Lfastcorr)
+    if (value <= 0x7F)
+       x = value / 4;
+    else
+       x = - (0x100 - value) / 4
+
+OtkatUOZ, % (Knock)
+    x = (value/36) * 100%
+
+XXopenValve, %
+    x = (value/255) * 100%
+
+bIdle (LC-1, Alfa)
+    x = (value + 2) * 0.0040117142054800014402 + 0.5
